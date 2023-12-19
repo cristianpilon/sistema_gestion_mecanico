@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Sistema_gestion_mecanico.Models;
 using Sistema_gestion_mecanico.Models.Dtos;
 using Sistema_gestion_mecanico.Services.Interfaces;

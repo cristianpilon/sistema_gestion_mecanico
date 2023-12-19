@@ -1,14 +1,16 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Sistema_gestion_mecanico.Models;
+using Sistema_gestion_mecanico.Models.MongoDb;
 using Sistema_gestion_mecanico.Services;
 using Sistema_gestion_mecanico.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<SGMecanicoDbSettings>(
+    builder.Configuration.GetSection("SGMecanicoMongoDb"));
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -56,6 +58,8 @@ builder.Services
     });
 
 builder.Services.AddScoped<IRectificadoService, RectificadoService>();
+builder.Services.AddSingleton<OperarioService>();
+
 
 var app = builder.Build();
 

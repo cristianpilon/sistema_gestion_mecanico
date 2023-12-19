@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Sistema_gestion_mecanico.Models;
-using Sistema_gestion_mecanico.Services.Interfaces;
+using Sistema_gestion_mecanico.Models.MongoDb;
+using Sistema_gestion_mecanico.Services;
 
 namespace Sistema_gestion_mecanico.Controllers
 {
@@ -10,18 +9,18 @@ namespace Sistema_gestion_mecanico.Controllers
     [ApiController]
     public class OperariosController : ControllerBase
     {
-        private readonly IRectificadoService _gestionService;
-        public OperariosController(IRectificadoService gestionService)
+        private readonly OperarioService _operarioService;
+        public OperariosController(OperarioService operarioService)
         {
-            _gestionService = gestionService;
+            _operarioService = operarioService;
         }
 
-        // GET: api/Estados
+        // GET: api/Operarios
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Estado>>> GetOperarios()
+        public async Task<ActionResult<IEnumerable<Operario>>> GetOperarios()
         {
-            var resultado = await _gestionService.GetOperarios();
+            var resultado = await _operarioService.GetAsync();
             if (resultado == null)
             {
                 return NotFound();

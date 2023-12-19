@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sistema_gestion_mecanico.Models;
 using Sistema_gestion_mecanico.Models.Dtos;
@@ -20,7 +19,7 @@ namespace Sistema_gestion_mecanico.Controllers
 
         // GET: api/Rectificados
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<IEnumerable<Rectificado>>> GetRectificados()
         {
             var resultado = await _gestionService.GetRectificados();
