@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sistema_gestion_mecanico.Models;
 using Sistema_gestion_mecanico.Services;
@@ -18,6 +19,7 @@ namespace Sistema_gestion_mecanico.Controllers
 
         // GET: api/Estados
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Estado>>> GetEstados()
         {
             var resultado = await _gestionService.GetEstados();

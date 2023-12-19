@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sistema_gestion_mecanico.Models;
 using Sistema_gestion_mecanico.Models.Dtos;
@@ -19,6 +20,7 @@ namespace Sistema_gestion_mecanico.Controllers
 
         // GET: api/Rectificados
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Rectificado>>> GetRectificados()
         {
             var resultado = await _gestionService.GetRectificados();
@@ -28,7 +30,9 @@ namespace Sistema_gestion_mecanico.Controllers
             }
             return Ok(resultado);
         }
+        
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<RectificadoDTO>>> AddRectificado(RectificadoDTO rectificado)
         {
             var resultado = await _gestionService.AddRectificado(rectificado);
@@ -38,7 +42,9 @@ namespace Sistema_gestion_mecanico.Controllers
             }
             return Ok(resultado);
         }
+
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<RectificadoDTO>>> DeleteRectificado(int id)
         {
             var resultado = await _gestionService.DeleteRectificado(id);

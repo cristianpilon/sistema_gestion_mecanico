@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace Sistema_gestion_mecanico.Controllers
 
         // GET: api/Clientes
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Cliente>>> GetClientes()
         {
             var resultado = await _gestionService.GetClientes();
