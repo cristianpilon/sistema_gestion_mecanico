@@ -23,7 +23,6 @@ namespace Sistema_gestion_mecanico.Services
                 .ThenInclude(p => p.Insumo)
                 .Include(a => a.Motores)
                 .Include(a => a.Cliente)
-                .Include(a => a.Operario)
                 .Include(a => a.Estado)
                 .ToListAsync();
 
@@ -33,14 +32,13 @@ namespace Sistema_gestion_mecanico.Services
         public async Task<Rectificado> AddRectificado(RectificadoDTO rectificado)
         {
             Cliente cliente = _context.Clientes.FirstOrDefault(c => c.Id == rectificado.ClienteID);
-            Operario operario = _context.Operarios.FirstOrDefault(c => c.Id == rectificado.OperarioID);
             List<Motor> motores = rectificado.Motores;
             List<Pedido> pedidos = new List<Pedido>();
             DateTime fecha = DateTime.Now;
             Estado estado = _context.Estados.FirstOrDefault(c => c.Id == 1);
 
 
-            Rectificado newRectificado = new Rectificado(cliente, operario, motores, pedidos, fecha, estado, 0, rectificado.ParaEnvio);
+            Rectificado newRectificado = new Rectificado(cliente, rectificado.OperarioID, motores, pedidos, fecha, estado, 0, rectificado.ParaEnvio);
 
 
             _context.Rectificados.Add(newRectificado);
@@ -86,7 +84,6 @@ namespace Sistema_gestion_mecanico.Services
                 .Include(a => a.Pedidos).ThenInclude(c => c.LineasDePedido).ThenInclude(p => p.Insumo)
                 .Include(a => a.Motores)
                 .Include(a => a.Cliente)
-                .Include(a => a.Operario)
                 .Include(a => a.Estado)
                 .FirstOrDefault(c => c.Id == id);
 
@@ -120,7 +117,6 @@ namespace Sistema_gestion_mecanico.Services
                .Include(a => a.Pedidos).ThenInclude(c => c.LineasDePedido).ThenInclude(p => p.Insumo)
                .Include(a => a.Motores)
                .Include(a => a.Cliente)
-               .Include(a => a.Operario)
                .Include(a => a.Estado)
                .FirstOrDefault(c => c.Id == id);
 
@@ -130,7 +126,7 @@ namespace Sistema_gestion_mecanico.Services
             }
 
             // Use the Update method to set the properties
-            entity.Update(updatedRectificado.Cliente, updatedRectificado.Operario, updatedRectificado.Motores, updatedRectificado.Estado, updatedRectificado.ParaEnvio);
+            entity.Update(updatedRectificado.Cliente, updatedRectificado.OperarioId, updatedRectificado.Motores, updatedRectificado.Estado, updatedRectificado.ParaEnvio);
 
             // Save changes to the database
             return await SaveChangesAsync();

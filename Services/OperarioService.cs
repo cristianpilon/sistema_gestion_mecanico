@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Sistema_gestion_mecanico.Models.Dtos;
 using Sistema_gestion_mecanico.Models.MongoDb;
 
 namespace Sistema_gestion_mecanico.Services
@@ -26,8 +27,12 @@ namespace Sistema_gestion_mecanico.Services
         public async Task<Operario?> GetAsync(string id) =>
             await _operariosCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(Operario newOperario) =>
-            await _operariosCollection.InsertOneAsync(newOperario);
+        public async Task CreateAsync(OperarioDTO newOperario)
+        {
+            var operario = new Operario(newOperario);
+
+            await _operariosCollection.InsertOneAsync(operario);
+        }
 
         public async Task UpdateAsync(string id, Operario updatedOperario) =>
             await _operariosCollection.ReplaceOneAsync(x => x.Id == id, updatedOperario);

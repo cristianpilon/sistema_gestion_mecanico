@@ -7,10 +7,10 @@
 
         }
 
-        public Rectificado(Cliente cliente, Operario operario, List<Motor> motores, List<Pedido> pedidos, DateTime fecha, Estado estado, decimal total, bool paraEnvio)
+        public Rectificado(Cliente cliente, string operarioId, List<Motor> motores, List<Pedido> pedidos, DateTime fecha, Estado estado, decimal total, bool paraEnvio)
         {
             Cliente = cliente;
-            Operario = operario;
+            OperarioId = operarioId;
             Motores = motores;
             Pedidos = pedidos;
             Fecha = fecha;
@@ -21,7 +21,7 @@
 
         public int Id { get; private set; }
         public Cliente Cliente { get; private set; }
-        public Operario Operario { get; private set; }
+        public string OperarioId { get; private set; }
         public List<Motor> Motores { get; private set; }
         public List<Pedido>? Pedidos { get; private set; }
         public DateTime Fecha { get; private set; }
@@ -29,10 +29,10 @@
         public decimal Total { get; private set; }
         public bool ParaEnvio { get; private set; }
 
-        public void Update(Cliente cliente, Operario operario, List<Motor> motores, Estado estado, bool paraEnvio)
+        public void Update(Cliente cliente, string operarioId, List<Motor> motores, Estado estado, bool paraEnvio)
         {
             Cliente = cliente;
-            Operario = operario;
+            OperarioId = operarioId;
             Motores = motores;
             Estado = estado;
             ParaEnvio = paraEnvio;
