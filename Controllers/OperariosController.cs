@@ -45,7 +45,7 @@ namespace Sistema_gestion_mecanico.Controllers
         // POST: api/Operarios
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<RectificadoDTO>>> AddOperario(OperarioDTO operario)
+        public async Task<IActionResult> AddOperario(OperarioDTO operario)
         {
             await _operarioService.CreateAsync(operario);
             return Ok();
@@ -54,7 +54,7 @@ namespace Sistema_gestion_mecanico.Controllers
         // PUT: api/Operarios/{id}
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutOperario(string id, [FromBody] Operario operario)
+        public async Task<IActionResult> PutOperario(string id, [FromBody] OperarioDTO operario)
         {
             var resultado = await _operarioService.GetAsync(id);
             if (resultado == null)

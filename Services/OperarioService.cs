@@ -34,8 +34,12 @@ namespace Sistema_gestion_mecanico.Services
             await _operariosCollection.InsertOneAsync(operario);
         }
 
-        public async Task UpdateAsync(string id, Operario updatedOperario) =>
-            await _operariosCollection.ReplaceOneAsync(x => x.Id == id, updatedOperario);
+        public async Task UpdateAsync(string id, OperarioDTO updatedOperario)
+        {
+            var operario = new Operario(updatedOperario);
+
+            await _operariosCollection.ReplaceOneAsync(x => x.Id == id, operario);
+        }
 
         public async Task RemoveAsync(string id) =>
             await _operariosCollection.DeleteOneAsync(x => x.Id == id);

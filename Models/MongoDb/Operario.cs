@@ -8,6 +8,7 @@ namespace Sistema_gestion_mecanico.Models.MongoDb
     {
         public Operario(OperarioDTO operario)
         {
+            Id = operario.Id;
             Nombre = operario.Nombre;
             Apellido = operario.Apellido;
             Dni = operario.Dni;
