@@ -2,6 +2,7 @@
 using Sistema_gestion_mecanico.Models;
 using Sistema_gestion_mecanico.Models.Dtos;
 using Sistema_gestion_mecanico.Services.Interfaces;
+using System.Linq;
 
 namespace Sistema_gestion_mecanico.Services
 {
@@ -13,20 +14,26 @@ namespace Sistema_gestion_mecanico.Services
             _context = context;
         }
 
-        public async Task<List<Rectificado>> GetRectificados()
+        public async Task<List<RectificadoResponseDTO>> GetRectificados(OperarioService operarioService)
         {
+            var operarios = await operarioService.GetAsync();
+
+
             var resultado = await _context.Rectificados.AsNoTracking()
                 .Include(a => a.Pedidos)
                 .ThenInclude(x => x.Proveedor)
-                .Include(a => a.Pedidos)
-                .ThenInclude(c => c.LineasDePedido)
-                .ThenInclude(p => p.Insumo)
                 .Include(a => a.Motores)
                 .Include(a => a.Cliente)
                 .Include(a => a.Estado)
                 .ToListAsync();
 
-            return resultado;
+
+            return resultado.Select(x =>
+            {
+                var operario = operarios.First(z => z.Id == x.OperarioId);
+                return new RectificadoResponseDTO(x.Id, new Cliente(x.Cliente.Nombre, x.Cliente.Apellido, x.Cliente.Dni, x.Cliente.Direccion, x.Cliente.Localidad, x.Cliente.Email),
+                       new Operario(operario.Nombre, operario.Apellido, operario.Dni, operario.Fecha), x.Motores, x.Fecha, x.Estado, x.Total, x.ParaEnvio);
+            }).ToList();
         }
 
         public async Task<Rectificado> AddRectificado(RectificadoDTO rectificado)
@@ -72,7 +79,7 @@ namespace Sistema_gestion_mecanico.Services
         }
         public async Task<List<Cliente>> GetClientes()
         {
-            var resultado = await _context.Clientes.Include(x=> x.Localidad).ThenInclude(x=> x.Provincia).ToListAsync();
+            var resultado = await _context.Clientes.Include(x => x.Localidad).ThenInclude(x => x.Provincia).ToListAsync();
 
             return resultado;
         }
@@ -110,15 +117,17 @@ namespace Sistema_gestion_mecanico.Services
             }
         }
 
-        public async Task<bool> EditRectificado(int id, RectificadoUpdateDto updatedRectificado)
+        public async Task<bool> EditRectificado(string id, RectificadoUpdateDto updatedRectificado, OperarioService operarioService)
         {
+            var cliente = await _context.Clientes.FirstAsync(c => c.Dni == updatedRectificado.ClienteId);
+            var operario = await operarioService.GetAsync(updatedRectificado.OperarioId);
+            var estado = await _context.Estados.FirstAsync(c => c.Id == updatedRectificado.EstadoId);
+
+
             var entity = _context.Rectificados
-               .Include(a => a.Pedidos).ThenInclude(x => x.Proveedor)
-               .Include(a => a.Pedidos).ThenInclude(c => c.LineasDePedido).ThenInclude(p => p.Insumo)
-               .Include(a => a.Motores)
                .Include(a => a.Cliente)
                .Include(a => a.Estado)
-               .FirstOrDefault(c => c.Id == id);
+               .FirstOrDefault(c => c.Id == Int32.Parse(id));
 
             if (entity == null)
             {
@@ -126,7 +135,7 @@ namespace Sistema_gestion_mecanico.Services
             }
 
             // Use the Update method to set the properties
-            entity.Update(updatedRectificado.Cliente, updatedRectificado.OperarioId, updatedRectificado.Motores, updatedRectificado.Estado, updatedRectificado.ParaEnvio);
+            entity.Update(cliente, updatedRectificado.OperarioId, estado, updatedRectificado.ParaEnvio);
 
             // Save changes to the database
             return await SaveChangesAsync();

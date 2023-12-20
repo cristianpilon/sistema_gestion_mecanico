@@ -29,11 +29,10 @@
         public decimal Total { get; private set; }
         public bool ParaEnvio { get; private set; }
 
-        public void Update(Cliente cliente, string operarioId, List<Motor> motores, Estado estado, bool paraEnvio)
+        public void Update(Cliente cliente, string operarioId, Estado estado, bool paraEnvio)
         {
             Cliente = cliente;
             OperarioId = operarioId;
-            Motores = motores;
             Estado = estado;
             ParaEnvio = paraEnvio;
         }

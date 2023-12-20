@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sistema_gestion_mecanico.Models;
 using Sistema_gestion_mecanico.Models.Dtos;
+using Sistema_gestion_mecanico.Services;
 using Sistema_gestion_mecanico.Services.Interfaces;
 
 namespace Sistema_gestion_mecanico.Controllers
@@ -11,18 +12,20 @@ namespace Sistema_gestion_mecanico.Controllers
     public class RectificadosController : ControllerBase
     {
         private readonly IRectificadoService _gestionService;
+        private readonly OperarioService _operarioService;
 
-        public RectificadosController(IRectificadoService gestionService)
+        public RectificadosController(IRectificadoService gestionService, OperarioService operarioService)
         {
             _gestionService = gestionService;
+            _operarioService = operarioService;
         }
 
         // GET: api/Rectificados
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Rectificado>>> GetRectificados()
+        public async Task<ActionResult<IEnumerable<RectificadoResponseDTO>>> GetRectificados()
         {
-            var resultado = await _gestionService.GetRectificados();
+            var resultado = await _gestionService.GetRectificados(_operarioService);
             if (resultado == null)
             {
                 return NotFound();
@@ -54,12 +57,14 @@ namespace Sistema_gestion_mecanico.Controllers
             return Ok(resultado);
         }
 
+        // PUT: api/Rectificados/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRectificado(int id, [FromBody] RectificadoUpdateDto updateDto)
+        [Authorize]
+        public async Task<IActionResult> PutRectificado(string id, [FromBody] RectificadoUpdateDto updateDto)
         {
             try
             {
-                var success = await _gestionService.EditRectificado(id, updateDto);
+                var success = await _gestionService.EditRectificado(id, updateDto, _operarioService);
                 if (success)
                 {
                     return Ok();
